@@ -1,3 +1,5 @@
+package decorator;
+
 public abstract class AddonDecorator implements Rentable {
     protected Rentable inner;
 

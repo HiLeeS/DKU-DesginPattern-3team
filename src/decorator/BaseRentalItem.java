@@ -1,3 +1,5 @@
+package decorator;
+
 public class BaseRentalItem implements Rentable {
     private int gearSetId;
     private int dailyPrice;

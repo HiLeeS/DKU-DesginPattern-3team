@@ -1,3 +1,5 @@
+package decorator;
+
 public class BatteryAddon extends AddonDecorator {
     private int unitPrice;
     private int count;
