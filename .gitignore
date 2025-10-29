@@ -1,0 +1,8 @@
+# JetBrains IDE
+.idea/
+
+# Build output
+out/
+
+# IDE project files
+*.iml
