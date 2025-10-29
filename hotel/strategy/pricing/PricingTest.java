@@ -1,6 +1,6 @@
-import pricing.*;
+package strategy.pricing;
 
-public class Main {
+public class PricingTest {
     public static void main(String[] args) {
         int basePrice = 10000; // 1일 기본 요금: 10,000원
         int qty = 2;           // 수량: 2개
@@ -19,9 +19,12 @@ public class Main {
 
         // 2. 장기 할인 요금제 테스트
         IPricingStrategy longTermStrategy = new LongTermDiscountStrategy();
-        int longTermPriceMid = longTermStrategy.calculatePrice(basePrice, qty, midTermDays);
-        int longTermPriceLong = longTermStrategy.calculatePrice(basePrice, qty, longTermDays);
+        int longTermPriceShort = longTermStrategy.calculatePrice(basePrice, qty, shortTermDays); // 5일 (할인 없음)
+        int longTermPriceMid = longTermStrategy.calculatePrice(basePrice, qty, midTermDays);   // 20일 (15% 할인)
+        int longTermPriceLong = longTermStrategy.calculatePrice(basePrice, qty, longTermDays);    // 35일 (30% 할인)
+
         System.out.println("[장기 할인 요금제]");
+        System.out.printf("  - 5일 대여 시 (할인 없음): %,d원\n", longTermPriceShort);
         System.out.printf("  - 20일 대여 시 (15%% 할인): %,d원\n", longTermPriceMid);
         System.out.printf("  - 35일 대여 시 (30%% 할인): %,d원\n\n", longTermPriceLong);
 
@@ -29,18 +32,6 @@ public class Main {
         IPricingStrategy peakSeasonStrategy = new PeakSeasonPricingStrategy();
         int peakPrice = peakSeasonStrategy.calculatePrice(basePrice, qty, shortTermDays);
         System.out.println("[성수기 요금제]");
-        System.out.printf("  - 5일 대여 시 (20%% 할증): %,d원\n\n", peakPrice);
-
-        // 4. 장비 등급 요금제 테스트 (데코레이터 패턴)
-        System.out.println("[장비 등급 요금제 (데코레이터)]");
-        // 4-1. 기본 요금 + 고급 장비 할증
-        IPricingStrategy highGradeDefaultPrice = new EquipmentGradePricingStrategy(defaultStrategy, "HIGH");
-        int decoratedPrice1 = highGradeDefaultPrice.calculatePrice(basePrice, qty, shortTermDays);
-        System.out.printf("  - 기본 요금 + 고급 장비(25%% 할증): %,d원\n", decoratedPrice1);
-
-        // 4-2. 성수기 요금 + 고급 장비 할증 (중첩 적용)
-        IPricingStrategy highGradePeakPrice = new EquipmentGradePricingStrategy(peakSeasonStrategy, "HIGH");
-        int decoratedPrice2 = highGradePeakPrice.calculatePrice(basePrice, qty, shortTermDays);
-        System.out.printf("  - 성수기 요금 + 고급 장비(25%% 할증): %,d원\n", decoratedPrice2);
+        System.out.printf("  - 5일 대여 시 (20%% 할증): %,d원\n", peakPrice);
     }
 }

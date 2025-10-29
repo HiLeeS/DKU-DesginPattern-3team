@@ -1,4 +1,4 @@
-package pricing;
+package strategy.pricing;
 
 /**
  * 장비 등급에 따라 요금을 조정하는 요금제입니다.

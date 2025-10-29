@@ -1,4 +1,4 @@
-package pricing;
+package strategy.pricing;
 
 public class PeakSeasonPricingStrategy implements IPricingStrategy {
     // 성수기 할증 상수: 20%

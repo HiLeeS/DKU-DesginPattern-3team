@@ -1,4 +1,4 @@
-package pricing;
+package strategy.pricing;
 
 public class LongTermDiscountStrategy implements IPricingStrategy {
     @Override
