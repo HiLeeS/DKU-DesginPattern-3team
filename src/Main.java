@@ -1,8 +1,3 @@
-import payment.model.Payment;
-import payment.strategy.CardPayment;
-import payment.strategy.KakaoPayment;
-import payment.strategy.NaverPayment;
-
 import java.util.Scanner;
 
 public class Main {

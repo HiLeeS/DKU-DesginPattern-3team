@@ -1,13 +1,11 @@
-package booking;
-
 public class BookingLine {
-    private int lineId;
+    private int lineId; // PK
     private int bookingId;   // Booking과 연결
-    private int gearSetId;
-    private int qty;
-    private int dailyPrice;
+    private int gearSetId; // GearSet과 연결
+    private int qty; // 수량
+    private int dailyPrice; // 일일 가격
 
-    public BookingLine(int lineId, int bookingId, int gearSetId, int qty, int dailyPrice) {
+    public BookingLine(int lineId, int bookingId, int gearSetId, int qty, int dailyPrice) { // 생성자
         this.lineId = lineId;
         this.bookingId = bookingId;
         this.gearSetId = gearSetId;
@@ -31,16 +29,16 @@ public class BookingLine {
         return qty;
     }
 
-    public int getDailyPrice() {
+    public int getDailyPrice() { // 일일 가격 반환 메서드
         return dailyPrice;
     }
 
-    public int calculateTotalPrice() {
+    public int calculateTotalPrice() { // 총 가격 계산 메서드
         return qty * dailyPrice;
     }
 
     @Override
-    public String toString() {
+    public String toString() { // 객체 정보 출력 메서드
         return "BookingLine{" +
                 "lineId=" + lineId +
                 ", bookingId=" + bookingId +
