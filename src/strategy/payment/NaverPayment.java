@@ -1,3 +1,5 @@
+package strategy.payment;
+
 public class NaverPayment implements PaymentStrategy {
     @Override
     public void pay(int amount) {

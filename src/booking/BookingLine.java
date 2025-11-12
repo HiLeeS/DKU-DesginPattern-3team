@@ -1,3 +1,5 @@
+package booking;
+
 public class BookingLine {
     private int lineId; // PK
     private int bookingId;   // Booking과 연결
@@ -39,7 +41,7 @@ public class BookingLine {
 
     @Override
     public String toString() { // 객체 정보 출력 메서드
-        return "BookingLine{" +
+        return "booking.BookingLine{" +
                 "lineId=" + lineId +
                 ", bookingId=" + bookingId +
                 ", gearSetId=" + gearSetId +
