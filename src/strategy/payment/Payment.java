@@ -1,3 +1,5 @@
+package strategy.payment;
+
 public class Payment {
 
     private int paymentId; // 결제 ID
@@ -23,5 +25,9 @@ public class Payment {
         }
         strategy.pay(amount);
         this.status = PaymentStatus.AUTHORIZED;
+    }
+
+    public PaymentStatus getStatus() {
+        return status;
     }
 }

@@ -1,3 +1,5 @@
+package booking;
+
 import java.util.Date;
 
 public class Booking {
@@ -46,7 +48,7 @@ public class Booking {
 
     @Override
     public String toString() {
-        return "Booking{" +
+        return "booking.Booking{" +
                 "bookingId=" + bookingId +
                 ", userId=" + userId +
                 ", startDate=" + startDate +

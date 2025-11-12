@@ -1,4 +1,4 @@
-package service;
+package observer.service;
 
 import event.GearReturned;
 import observer.Observer;
