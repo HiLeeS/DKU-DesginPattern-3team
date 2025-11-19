@@ -5,6 +5,8 @@ import observer.impl.*;
 import observer.service.*;
 import strategy.payment.*;
 import strategy.pricing.*;
+import factory.pricing.*;
+import factory.pricing.PricingStrategyFactory;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -37,20 +39,30 @@ public class IntegrationDemo {
         System.out.println("    📦 구성: " + rentable.getDescription());
         System.out.println("    💰 기본 금액(" + days + "일 기준): " + baseCost + "원\n");
 
-        // 3️⃣ 요금 계산 (Strategy - Pricing)
-        IPricingStrategy pricing =
-                new EquipmentGradePricingStrategy(
-                        new PeakSeasonPricingStrategy(), "HIGH"
-                );
+        // 3️⃣ 요금 계산 (Abstract Factory - Pricing)
+        PricingContext context = new PricingContext(days);
+        context.setPeakSeason(true); // 성수기 설정
+        context.setEquipmentGrade("HIGH"); // 고급 장비
+        
+        // Abstract Factory 패턴 사용: 상황에 맞는 정책 팩토리 선택
+        RentalPolicyFactory policyFactory = PricingStrategyFactory.getRentalPolicyFactory(context, true); // VIP
+        DiscountStrategy discountStrategy = policyFactory.createDiscountStrategy();
+        CancellationPolicy cancellationPolicy = policyFactory.createCancellationPolicy();
+        
+        // 장비 등급 할증 적용 (데코레이터 패턴)
+        IPricingStrategy pricing = new EquipmentGradePricingStrategy(
+                new DiscountStrategyAdapter(discountStrategy), "HIGH"
+        );
         int totalPrice = pricing.calculatePrice(baseCost, qty, days);
-        System.out.println("[3] 요금 계산(Strategy)");
-        System.out.println("    ⚙️ 적용 전략: 성수기 + 고급 장비 할증");
-        System.out.println("    💰 최종 결제 금액: " + totalPrice + "원\n");
+        System.out.println("[3] 요금 계산(Abstract Factory - Pricing)");
+        System.out.println("    ⚙️ 적용 전략: " + discountStrategy.getClass().getSimpleName() + " + 고급 장비 할증");
+        System.out.println("    💰 최종 결제 금액: " + totalPrice + "원");
+        System.out.println("    📋 취소 정책: " + cancellationPolicy.getClass().getSimpleName() + "\n");
 
-        // 4️⃣ 결제 (Strategy - Payment)
+        // 4️⃣ 결제 (Abstract Factory - Payment)
         Payment payment = new Payment(2001, booking.getBookingId(), totalPrice);
-        payment.setStrategy(new KakaoPayment());
-        System.out.println("[4] 결제 처리(Strategy)");
+        payment.setPaymentMethod(PaymentMethod.KAKAO); // Abstract Factory 패턴 사용
+        System.out.println("[4] 결제 처리(Abstract Factory - Payment)");
         payment.pay();
         System.out.println("    ✅ 결제 상태: " + payment.getStatus() + "\n");
 
