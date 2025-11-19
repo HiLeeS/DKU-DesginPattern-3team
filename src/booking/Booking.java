@@ -9,10 +9,7 @@ public class Booking {
     private Date endDate;
     private Status status;
 
-    // 예약 상태 Enum
-    public enum Status {
-        PENDING, CONFIRMED, CANCELLED
-    }
+
 
     public Booking(int bookingId, int userId, Date startDate, Date endDate, Status status) {
         this.bookingId = bookingId;
