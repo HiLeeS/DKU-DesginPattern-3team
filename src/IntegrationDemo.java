@@ -10,8 +10,28 @@ import factory.pricing.PricingStrategyFactory;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.Map;
+import java.util.HashMap;
 
 public class IntegrationDemo {
+
+    private static final Map<Integer, Integer> GEAR_SET_PRICES = new HashMap<>();
+    private static final Map<Integer, String> GEAR_SET_NAMES = new HashMap<>();
+
+    static {
+        GEAR_SET_PRICES.put(1, 50000);
+        GEAR_SET_NAMES.put(1, "패밀리 캠핑 세트");
+
+        GEAR_SET_PRICES.put(2, 70000);
+        GEAR_SET_NAMES.put(2, "커플 캠핑 세트");
+
+        GEAR_SET_PRICES.put(3, 40000);
+        GEAR_SET_NAMES.put(3, "솔로 캠핑 세트");
+
+        GEAR_SET_PRICES.put(4, 80000);
+        GEAR_SET_NAMES.put(4, "프리미엄 캠핑 세트");
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("===== 🏕️ Camping Gear Rental System - 통합 테스트 시작 =====\n");
@@ -20,19 +40,28 @@ public class IntegrationDemo {
         System.out.println("--- [1단계: 예약 정보 입력] ---");
         System.out.print("사용자 ID를 입력하세요 (예: 1001): ");
         int userId = scanner.nextInt();
-        System.out.print("대여할 장비 세트 ID를 입력하세요 (예: 1): ");
+
+        System.out.println("\n대여할 장비 세트를 선택하세요:");
+        for (Map.Entry<Integer, String> entry : GEAR_SET_NAMES.entrySet()) {
+            System.out.printf("%d: %s (기본료: %d원)\n", entry.getKey(), entry.getValue(), GEAR_SET_PRICES.get(entry.getKey()));
+        }
+        System.out.print("선택: ");
         int gearSetId = scanner.nextInt();
+
         System.out.print("수량을 입력하세요 (예: 1): ");
         int qty = scanner.nextInt();
-        System.out.print("일일 대여료를 입력하세요 (예: 30000): ");
-        int dailyPrice = scanner.nextInt();
         System.out.print("대여 기간(일)을 입력하세요 (예: 3): ");
         int days = scanner.nextInt();
+
+        // gearSetId에 따라 기본 일일 대여료를 가져옴
+        int dailyPrice = GEAR_SET_PRICES.getOrDefault(gearSetId, 50000);
+        String gearSetName = GEAR_SET_NAMES.getOrDefault(gearSetId, "기본 캠핑 세트");
 
         Booking booking = new Booking(101, userId, new Date(), new Date(), Status.PENDING);
         BookingLine line = new BookingLine(1, booking.getBookingId(), gearSetId, qty, dailyPrice);
         System.out.println("\n[1] 예약 생성 완료 → " + booking);
         System.out.println("    예약 항목 → " + line + "\n");
+        System.out.println("    선택한 장비는 '" + gearSetName + "'이며, 기본 대여료는 " + dailyPrice + "원입니다.\n");
 
         // 2️⃣ 데코레이터 패턴: 장비 구성
         System.out.println("--- [2단계: 추가 옵션 선택] ---");
@@ -43,7 +72,7 @@ public class IntegrationDemo {
         System.out.print("보조배터리를 추가하시겠습니까? (개수, 0이면 추가 안함): ");
         int batteryCount = scanner.nextInt();
 
-        Rentable rentable = new BaseRentalItem(gearSetId, line.getDailyPrice(), "패밀리 캠핑 세트");
+        Rentable rentable = new BaseRentalItem(gearSetId, dailyPrice, gearSetName);
         if (lampCount > 0) {
             rentable = new LampAddon(rentable, 7000, lampCount);
         }
@@ -57,7 +86,7 @@ public class IntegrationDemo {
         int baseCost = rentable.cost(days, qty);
         System.out.println("\n[2] 장비 구성(Decorator)");
         System.out.println("    📦 구성: " + rentable.getDescription());
-        System.out.println("    💰 기본 금액(" + days + "일 기준): " + baseCost + "원\n");
+        System.out.println("    💰 기본 및 추가옵션 금액(" + days + "일 기준): " + baseCost + "원\n");
 
         // 3️⃣ 요금 계산 (Abstract Factory - Pricing)
         System.out.println("--- [3단계: 요금 계산] ---");
